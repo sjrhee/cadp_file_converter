@@ -37,14 +37,14 @@ public class Config {
         loadEnv();
     }
     
-    // ...
+
 
     public Map<Integer, String> getColumnPolicies() { return columnPolicies; }
     public void addColumnPolicy(int index, String policy) {
         this.columnPolicies.put(index, policy);
     }
     
-    // ...
+
 
     public String getDefaultPolicy() { return defaultPolicy; }
     public void setDefaultPolicy(String policy) { this.defaultPolicy = policy; }
@@ -52,14 +52,35 @@ public class Config {
     public String getDelimiter() { return delimiter; }
     public void setDelimiter(String delimiter) { this.delimiter = delimiter; }
 
-    // Removed single getColumn/setColumn as we now use map
-    // ...
+
 
     private void loadEnv() {
-        // ... (existing loadEnv logic) ...
+        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+
+        String host = dotenv.get("CADP_API_HOST");
+        if (host != null && !host.isEmpty()) {
+            this.apiHost = host;
+        }
+
+        String port = dotenv.get("CADP_API_PORT");
+        if (port != null && !port.isEmpty()) {
+            try {
+                this.apiPort = Integer.parseInt(port);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid CADP_API_PORT format, using default: " + this.apiPort);
+            }
+        }
+
+        String tls = dotenv.get("CADP_API_TLS");
+        if (tls != null && !tls.isEmpty()) {
+            this.apiTls = Boolean.parseBoolean(tls);
+        }
+
+        this.registrationToken = dotenv.get("CADP_REGISTRATION_TOKEN");
+        this.userName = dotenv.get("CADP_USER_NAME");
     }
     
-    // ... (existing getters/setters) ...
+
 
     public int getBatchSize() { return batchSize; }
     public void setBatchSize(int batchSize) { this.batchSize = batchSize; }
