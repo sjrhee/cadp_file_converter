@@ -25,6 +25,7 @@ public class Main {
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
+        formatter.setWidth(120);
 
         try {
             CommandLine cmd = parser.parse(options, args);
