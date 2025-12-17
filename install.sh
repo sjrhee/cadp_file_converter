@@ -48,10 +48,13 @@ else
     exit 1
 fi
 
-# Handle Log4j (Silence logs by linking to /dev/null)
-# The CADP library insists on writing to lib/CADPLogs.txt and ignores external config.
-# We redirect this to /dev/null to fix permission errors and silence logs.
-ln -sf /dev/null "$INSTALL_DIR/lib/CADPLogs.txt"
+# Handle Log4j (Redirect logs to /tmp for debugging)
+# The CADP library insists on writing to lib/CADPLogs.txt.
+# We redirect this to a writable temporary file.
+LOG_FILE="/tmp/$APP_NAME.log"
+touch "$LOG_FILE"
+chmod 666 "$LOG_FILE" # Allow any user to write to the log
+ln -sf "$LOG_FILE" "$INSTALL_DIR/lib/CADPLogs.txt"
 
 echo "Step 3: Creating launcher command at $BIN_PATH..."
 cat > "$BIN_PATH" <<EOF

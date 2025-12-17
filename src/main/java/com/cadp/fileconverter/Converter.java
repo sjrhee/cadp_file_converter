@@ -41,6 +41,11 @@ public class Converter {
             int lineNumber = 0;
 
             while ((line = reader.readLine()) != null) {
+                // Skip empty lines
+                if (line.strip().isEmpty()) {
+                    continue;
+                }
+
                 // Header handling (Main thread)
                 if (lineNumber == 0 && config.isSkipHeader()) {
                     writer.write(line);
@@ -63,13 +68,22 @@ public class Converter {
                         if (parts.length > colIdx) {
                             String target = parts[colIdx];
                             String processed;
-
-                            if ("protect".equalsIgnoreCase(config.getMode())) {
-                                processed = cadpService.protect(target, policy);
-                            } else if ("reveal".equalsIgnoreCase(config.getMode())) {
-                                processed = cadpService.reveal(target, policy);
-                            } else {
+                            
+                            // Skip processing if target is empty
+                            if (target == null || target.strip().isEmpty()) {
                                 processed = target;
+                            } else {
+                                try {
+                                    if ("protect".equalsIgnoreCase(config.getMode())) {
+                                        processed = cadpService.protect(target, policy);
+                                    } else if ("reveal".equalsIgnoreCase(config.getMode())) {
+                                        processed = cadpService.reveal(target, policy);
+                                    } else {
+                                        processed = target;
+                                    }
+                                } catch (Exception e) {
+                                    throw new RuntimeException("Error processing value '" + target + "': " + e.getMessage(), e);
+                                }
                             }
                             parts[colIdx] = processed;
                         }
