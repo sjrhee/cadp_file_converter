@@ -9,7 +9,7 @@ public class Main {
         options.addOption("m", "mode", true, "Operation mode: protect or reveal");
         
         // Input/Output
-        options.addOption(Option.builder("i").longOpt("input").hasArg().desc("Input file path (deprecated, use positional argument)").build());
+        options.addOption(Option.builder("i").longOpt("input").hasArg().desc("Input file path").build());
         options.addOption(Option.builder("o").longOpt("output").hasArg().desc("Output file path").build());
         
         // Processing Options
