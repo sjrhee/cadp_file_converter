@@ -61,7 +61,7 @@ public class Main {
                 }
             } else {
                 System.out.println("Error: Mode required (-m protect or -m reveal)");
-                formatter.printHelp("cadp-file-converter [input_file]", options);
+                formatter.printHelp("cadp-file-converter [input_file]", null, options, "\nEnvironment variables (or .env in current dir) required:\nCADP_API_HOST, CADP_REGISTRATION_TOKEN, etc.", true);
                 System.exit(1);
             }
 
