@@ -79,7 +79,7 @@ java -jar target/cadp-file-converter-1.0.jar \
 - [x] 유연한 파일 처리를 위한 CLI
 - [x] 환경 변수 설정 지원 (.env)
 - [x] 멀티 스레드 처리 지원
-- [ ] 실제 Thales CADP Java 라이브러리 연동 (현재 `CadpService` 스텁 사용 중)
+- [x] 실제 Thales CADP Java 라이브러리 연동 (`CadpClient` 통합 완료)
 - [ ] 배포를 위한 헬퍼 스크립트
 - [ ] Docker 지원
 
