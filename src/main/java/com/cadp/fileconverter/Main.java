@@ -23,6 +23,8 @@ public class Main {
         
         options.addOption("h", "help", false, "Print help");
 
+        options.addOption(Option.builder().longOpt("init").desc("Generate sample .env file").build());
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(120);
@@ -32,7 +34,27 @@ public class Main {
             CommandLine cmd = parser.parse(options, args);
 
             if (cmd.hasOption("help")) {
-                formatter.printHelp("cadp-file-converter [input_file]", options);
+                formatter.printHelp("cadp-file-converter [input_file]", null, options, "\nEnvironment variables (or .env in current dir) required:\nCADP_API_HOST, CADP_REGISTRATION_TOKEN, etc.", true);
+                return;
+            }
+
+            if (cmd.hasOption("init")) {
+                java.io.File envFile = new java.io.File(".env");
+                if (envFile.exists()) {
+                    System.out.println("Warning: .env file already exists in current directory. Skipping generation.");
+                } else {
+                    try (java.io.FileWriter writer = new java.io.FileWriter(envFile)) {
+                        writer.write("# CADP Connection Configuration\n");
+                        writer.write("CADP_API_HOST=192.168.0.10\n");
+                        writer.write("CADP_API_PORT=32082\n\n");
+                        writer.write("# Authentication\n");
+                        writer.write("CADP_REGISTRATION_TOKEN=your_token_here\n");
+                        writer.write("CADP_USER_NAME=your_username\n\n");
+                        writer.write("# Protection Defaults\n");
+                        writer.write("CADP_PROTECTION_POLICY_NAME=dev-users-policy\n");
+                        System.out.println("Success: Sample .env file generated in current directory.");
+                    }
+                }
                 return;
             }
 
