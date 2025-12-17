@@ -156,13 +156,24 @@ public class Main {
             formatter.printHelp("cadp-file-converter", options);
             System.exit(1);
         } catch (RuntimeException e) {
-            System.err.println("Initialization Error: " + e.getMessage());
-            // Only print stack trace if debug mode is enabled (optional, for now keep it simple)
-            // e.printStackTrace(); 
+            if (e.getMessage() != null && e.getMessage().contains("missing host or token")) {
+                System.err.println("Configuration Error: Missing required connection parameters.");
+                System.err.println("Please ensure CADP_API_HOST, CADP_REGISTRATION_TOKEN, etc. are set in .env or environment variables.");
+                System.err.println("Tip: Run with --init to generate a sample .env file.");
+            } else {
+                System.err.println("Initialization Error: " + e.getMessage());
+            }
             System.exit(1);
         } catch (Exception e) {
-            System.err.println("Unexpected Error: " + e.getMessage());
-            e.printStackTrace();
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("missing host or token")) {
+                System.err.println("Configuration Error: Missing required connection parameters.");
+                System.err.println("Please ensure CADP_API_HOST, CADP_REGISTRATION_TOKEN, etc. are set in .env or environment variables.");
+                System.err.println("Tip: Run with --init to generate a sample .env file.");
+            } else {
+                System.err.println("Unexpected Error: " + msg);
+                e.printStackTrace();
+            }
             System.exit(1);
         }
     }
