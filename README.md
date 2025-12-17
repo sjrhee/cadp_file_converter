@@ -2,12 +2,6 @@
 
 Thales CipherTrust Application Data Protection (CADP)를 사용하여 데이터 파일(CSV)을 암호화 및 복호화하는 고성능 커맨드라인 도구입니다.
 
-## 필수 조건 (Prerequisites)
-
-- Java 17 이상
-- Maven 3.6 이상
-- Thales CADP 로컬/네트워크 설정 (실제 키 관리 연동을 위해 필요)
-
 ## 빌드 (Build)
 
 ```bash
@@ -80,15 +74,6 @@ java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar \
   -c 1=credit-card-policy -c 3 \
   -s
 ```
-
-## 기능 및 로드맵 (Features & Roadmap)
-
-- [x] 유연한 파일 처리를 위한 CLI
-- [x] 환경 변수 설정 지원 (.env)
-- [x] 멀티 스레드 처리 지원
-- [x] 실제 Thales CADP Java 라이브러리 연동 (`CadpClient` 통합 완료)
-- [ ] 배포를 위한 헬퍼 스크립트
-- [ ] Docker 지원
 
 ## 문제 해결 (Troubleshooting)
 
