@@ -24,7 +24,7 @@ public class Config {
     private String outputFilePath;
     
     // Batch & Parallel
-    private int batchSize = 100;
+
     private int parallelWorkers = 1;
 
     // API Config
@@ -78,12 +78,16 @@ public class Config {
 
         this.registrationToken = dotenv.get("CADP_REGISTRATION_TOKEN");
         this.userName = dotenv.get("CADP_USER_NAME");
+        
+        String policy = dotenv.get("CADP_PROTECTION_POLICY_NAME");
+        if (policy != null && !policy.isEmpty()) {
+            this.defaultPolicy = policy;
+        }
     }
     
 
 
-    public int getBatchSize() { return batchSize; }
-    public void setBatchSize(int batchSize) { this.batchSize = batchSize; }
+
 
     public int getParallelWorkers() { return parallelWorkers; }
     public void setParallelWorkers(int parallelWorkers) { this.parallelWorkers = parallelWorkers; }

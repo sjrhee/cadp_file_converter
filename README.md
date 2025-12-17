@@ -1,87 +1,88 @@
-# CADP File Converter
+# CADP 파일 변환기 (CADP File Converter)
 
-A high-performance command-line tool for encrypting and decrypting data files (CSV) using Thales CipherTrust Application Data Protection (CADP).
+Thales CipherTrust Application Data Protection (CADP)를 사용하여 데이터 파일(CSV)을 암호화 및 복호화하는 고성능 커맨드라인 도구입니다.
 
-## Prerequisites
+## 필수 조건 (Prerequisites)
 
-- Java 17 or higher
-- Maven 3.6+
-- Thales CADP Local/Network Configuration (for actual Key Management integration)
+- Java 17 이상
+- Maven 3.6 이상
+- Thales CADP 로컬/네트워크 설정 (실제 키 관리 연동을 위해 필요)
 
-## Build
+## 빌드 (Build)
 
 ```bash
 mvn clean package
 ```
 
-This will create an executable jar in the `target/` directory (e.g., `cadp-file-converter-1.0-SNAPSHOT-jar-with-dependencies.jar`).
+이 명령을 실행하면 `target/` 디렉토리에 실행 가능한 jar 파일이 생성됩니다 (예: `cadp-file-converter-1.0-SNAPSHOT-jar-with-dependencies.jar`).
 
-## Environment Variables
+## 환경 변수 (Environment Variables)
 
-Create a `.env` file in the root directory or set these environment variables directly:
+루트 디렉토리에 `.env` 파일을 생성하거나 다음 환경 변수들을 직접 설정하십시오:
 
-| Variable | Description | Default |
+| 변수명 | 설명 | 기본값 |
 |----------|-------------|---------|
-| `CADP_API_HOST` | The IP address of the CADP/NAE Server | `192.168.0.10` |
-| `CADP_API_PORT` | The port of the CADP/NAE Server | `32082` |
-| `CADP_API_TLS` | Enable TLS for the connection (`true`/`false`) | `false` |
-| `CADP_REGISTRATION_TOKEN` | Registration Token for CADP | (Required) |
-| `CADP_USER_NAME` | Username for CADP operations | (Required) |
+| `CADP_API_HOST` | CADP/NAE 서버의 IP 주소 | `192.168.0.10` |
+| `CADP_API_PORT` | CADP/NAE 서버의 포트 | `32082` |
+| `CADP_API_TLS` | 연결 시 TLS 사용 여부 (`true`/`false`) | `false` |
+| `CADP_REGISTRATION_TOKEN` | CADP 등록 토큰 (Registration Token) | (필수) |
+| `CADP_USER_NAME` | CADP 작업을 수행할 사용자명 | (필수) |
+| `CADP_PROTECTION_POLICY_NAME` | 기본 보호 정책 (키 이름) | `dev-users-policy` |
 
-## Usage
+## 사용법 (Usage)
 
-### Basic Command Structure
+### 기본 명령어 구조
 
 ```bash
 java -jar target/cadp-file-converter-*.jar [OPTIONS]
 ```
 
-### Options
+### 옵션 (Options)
 
-- `-m, --mode <mode>` : Operation mode. `protect` (encrypt) or `reveal` (decrypt).
-- `-i, --input <file>` : Input CSV file path.
-- `-o, --output <file>` : Output CSV file path.
-- `-c, --config <file>` : Path to configuration file (optional).
-- `--skip-header` : Skip the first row (header) of the CSV.
-- `--delimiter <char>` : CSV delimiter (default: `,`).
-- `--batch <size>` : Batch size for processing (default: `100`).
-- `--threads <number>` : Number of parallel worker threads (default: `1`).
+- `-m, --mode <mode>` : 동작 모드. `protect` (암호화) 또는 `reveal` (복호화).
+- `-i, --input <file>` : 입력 CSV 파일 경로.
+- `-c, --column <index>` : 처리할 컬럼 인덱스 (1부터 시작). 반복 사용 가능.
+    - 사용법: `-c 3` (3번째 컬럼에 기본 정책 사용), `-c 3=policy01` (3번째 컬럼에 `policy01` 정책 사용).
+- `-o, --output <file>` : 출력 CSV 파일 경로.
+- `-s, --skip-header` : CSV의 첫 번째 줄(헤더)을 건너뜁니다.
+- `-d, --delimiter <char>` : CSV 구분자 (기본값: `,`).
+- `-t, --threads <number>` : 병렬 작업 스레드 수 (기본값: `1`).
 
-### Examples
+### 예제 (Examples)
 
-**Encryption (Protect):**
-Encrypt columns 1 and 3 (0-based index) of `data.csv`.
-
-```bash
-java -jar target/cadp-file-converter-1.0.jar \
-  --mode protect \
-  --input input_data.csv \
-  --output encrypted_data.csv \
-  --columns 1:credit-card-policy,3:ssn-policy \
-  --skip-header
-```
-
-**Decryption (Reveal):**
-Decrypt the same file.
+**암호화 (Protect):**
+`data.csv` 파일의 1번째 컬럼(특정 정책 사용)과 3번째 컬럼(기본 정책 사용)을 암호화합니다.
 
 ```bash
 java -jar target/cadp-file-converter-1.0.jar \
-  --mode reveal \
-  --input encrypted_data.csv \
-  --output decrypted_data.csv \
-  --columns 1:credit-card-policy,3:ssn-policy \
-  --skip-header
+  -m protect \
+  -i input_data.csv \
+  -o encrypted_data.csv \
+  -c 1=credit-card-policy -c 3 \
+  -s
 ```
 
-## Features & roadmap
+**복호화 (Reveal):**
+위에서 암호화한 파일을 동일한 설정으로 복호화합니다.
 
-- [x] CLI for flexible file processing
-- [x] Environment variable configuration
-- [x] Multi-threaded processing
-- [ ] Integration with real Thales CADP Java Library (currently using `CadpService` stub)
-- [ ] Helper scripts for specialized deployment
-- [ ] Docker support
+```bash
+java -jar target/cadp-file-converter-1.0.jar \
+  -m reveal \
+  -i encrypted_data.csv \
+  -o decrypted_data.csv \
+  -c 1=credit-card-policy -c 3 \
+  -s
+```
 
-## Troubleshooting
+## 기능 및 로드맵 (Features & Roadmap)
 
-If you encounter connection issues, verify `CADP_API_HOST` and ensure the proper firewall rules are in place.
+- [x] 유연한 파일 처리를 위한 CLI
+- [x] 환경 변수 설정 지원 (.env)
+- [x] 멀티 스레드 처리 지원
+- [ ] 실제 Thales CADP Java 라이브러리 연동 (현재 `CadpService` 스텁 사용 중)
+- [ ] 배포를 위한 헬퍼 스크립트
+- [ ] Docker 지원
+
+## 문제 해결 (Troubleshooting)
+
+연결 문제가 발생하는 경우, `CADP_API_HOST` 설정과 방화벽 규칙이 올바른지 확인하십시오.

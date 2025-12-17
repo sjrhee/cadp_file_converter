@@ -6,33 +6,19 @@ public class Main {
     public static void main(String[] args) {
         Options options = new Options();
         // Core features
-        options.addOption("e", "encode", false, "Encode (protect) data");
-        options.addOption("d", "decode", false, "Decode (reveal) data");
+        options.addOption("m", "mode", true, "Operation mode: protect or reveal");
         
         // Input/Output
-        options.addOption("i", "input", true, "Input file path"); // Keeping explicit -i for now or should I use args[0]? crdp uses args[0]. Let's support both or stick to args[0] if I can. 
-        // crdp-file-converter <input_file> [flags].  So input file is a positional arg.
-        // But my current Main uses -i. I should probably switch to positional if I want to match exactly, but let's stick to -i for safety or check if args has positional? 
-        // User said "Implement options". I will keep -i as named option to be safe with Commons CLI or add it as an option if I want to be cleaner? 
-        // Actually crdp usage: crdp-file-converter <input_file> [flags]
-        // I will stick to -i for now as it makes parsing easier with Commons CLI default parser, or I can check getArgList(). 
-        // Let's stick to CLI options provided in request. 
-        // Wait, the request output shows <input_file> as positional. 
-        // I will ADD support for positional arg if -i is missing? 
-        // For now, let's keep -i option for simplicity as I am 'Implementing options'.
-        // Let's add the requested flags.
-
         options.addOption(Option.builder("i").longOpt("input").hasArg().desc("Input file path (deprecated, use positional argument)").build());
         options.addOption(Option.builder("o").longOpt("output").hasArg().desc("Output file path").build());
         
         // Processing Options
         options.addOption("s", "skip-header", false, "Skip header line");
-        options.addOption(Option.builder().longOpt("delimiter").hasArg().desc("Column delimiter").build());
+        options.addOption("d", "delimiter", true, "Column delimiter");
         options.addOption("c", "column", true, "Column index");
 
         // Advanced Options
-        options.addOption(Option.builder().longOpt("batch-size").hasArg().type(Number.class).desc("Batch size").build());
-        options.addOption("p", "parallel", true, "Number of parallel workers");
+        options.addOption("t", "threads", true, "Number of parallel workers");
         options.addOption(Option.builder().longOpt("timeout").hasArg().type(Number.class).desc("Request timeout").build());
         
         options.addOption("h", "help", false, "Print help");
@@ -62,12 +48,18 @@ public class Main {
             }
 
             // Handle Mode
-            if (cmd.hasOption("encode")) {
-                config.setMode("protect");
-            } else if (cmd.hasOption("decode")) {
-                config.setMode("reveal");
+            if (cmd.hasOption("mode")) {
+                String mode = cmd.getOptionValue("mode");
+                if ("protect".equalsIgnoreCase(mode) || "encode".equalsIgnoreCase(mode)) {
+                    config.setMode("protect");
+                } else if ("reveal".equalsIgnoreCase(mode) || "decode".equalsIgnoreCase(mode)) {
+                    config.setMode("reveal");
+                } else {
+                    System.out.println("Error: Invalid mode. Use 'protect' or 'reveal'");
+                    System.exit(1);
+                }
             } else {
-                System.out.println("Error: Mode required (-e or -d)");
+                System.out.println("Error: Mode required (-m protect or -m reveal)");
                 formatter.printHelp("cadp-file-converter [input_file]", options);
                 System.exit(1);
             }
@@ -108,8 +100,8 @@ public class Main {
 
             if (cmd.hasOption("skip-header")) config.setSkipHeader(true);
             if (cmd.hasOption("delimiter")) config.setDelimiter(cmd.getOptionValue("delimiter"));
-            if (cmd.hasOption("batch-size")) config.setBatchSize(Integer.parseInt(cmd.getOptionValue("batch-size")));
-            if (cmd.hasOption("parallel")) config.setParallelWorkers(Integer.parseInt(cmd.getOptionValue("parallel")));
+
+            if (cmd.hasOption("threads")) config.setParallelWorkers(Integer.parseInt(cmd.getOptionValue("threads")));
             if (cmd.hasOption("timeout")) config.setTimeout(Integer.parseInt(cmd.getOptionValue("timeout")));
 
             System.out.println("Starting conversion...");
