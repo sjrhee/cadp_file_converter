@@ -50,7 +50,7 @@ public class Main {
                     try (java.io.FileWriter writer = new java.io.FileWriter(envFile)) {
                         writer.write("# CADP Connection Configuration\n");
                         writer.write("CADP_KMS_HOST=192.168.0.10\n");
-                        writer.write("CADP_KMS_PORT=32082\n\n");
+                        writer.write("CADP_KMS_PORT=443\n\n");
                         writer.write("# Authentication\n");
                         writer.write("CADP_REGISTRATION_TOKEN=your_token_here\n");
                         writer.write("CADP_USER_NAME=your_username\n\n");

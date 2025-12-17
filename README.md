@@ -34,9 +34,9 @@ sudo ./install.sh
 | 변수명 | 설명 | 기본값 |
 |----------|-------------|---------|
 | `CADP_KMS_HOST` | CADP/NAE 서버의 IP 주소 | `192.168.0.10` |
-| `CADP_KMS_PORT` | CADP/NAE 서버의 포트 | `32082` |
-| `CADP_REGISTRATION_TOKEN` | CADP 등록 토큰 (Registration Token) | (필수) |
-| `CADP_USER_NAME` | CADP 작업을 수행할 사용자명 | (필수) |
+| `CADP_KMS_PORT` | CADP/NAE 서버의 포트 | `443` |
+| `CADP_REGISTRATION_TOKEN` | CADP 등록 토큰 (Registration Token) | `j96WogOWbdLPkuc....` |
+| `CADP_USER_NAME` | CADP 작업을 수행할 사용자명 | `dev-user` |
 | `CADP_PROTECTION_POLICY_NAME` | 기본 보호 정책 (키 이름) | `dev-users-policy` |
 
 ## 사용법 (Usage)

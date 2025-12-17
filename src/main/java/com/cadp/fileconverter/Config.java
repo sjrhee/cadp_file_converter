@@ -7,7 +7,7 @@ import java.util.Map;
 public class Config {
     // API Connection
     private String apiHost = "192.168.0.10";
-    private int apiPort = 32082;
+    private int apiPort = 443;
     private String registrationToken;
     private String userName;
 
