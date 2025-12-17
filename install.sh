@@ -56,12 +56,6 @@ touch "$LOG_FILE"
 chmod 666 "$LOG_FILE" # Allow any user to write to the log
 ln -sf "$LOG_FILE" "$INSTALL_DIR/lib/CADPLogs.txt"
 
-# Copy .env if exists (as default system config)
-if [ -f ".env" ]; then
-    echo "Copying local .env to $INSTALL_DIR/.env"
-    cp ".env" "$INSTALL_DIR/"
-    chmod 644 "$INSTALL_DIR/.env"
-fi
 
 echo "Step 3: Creating launcher command at $BIN_PATH..."
 cat > "$BIN_PATH" <<EOF
@@ -76,14 +70,6 @@ if ! command -v java &> /dev/null; then
 fi
 
 # Execute
-# Note: We attempt to load .env from the installation directory if it exists,
-# allowing the tool to work from any CWD without needing a local .env copy.
-if [ -f "$INSTALL_DIR/.env" ]; then
-    set -a
-    source "$INSTALL_DIR/.env"
-    set +a
-fi
-
 exec java -jar "$INSTALL_DIR/$JAR_NAME" "\$@"
 EOF
 

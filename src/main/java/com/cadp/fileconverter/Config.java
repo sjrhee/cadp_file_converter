@@ -54,7 +54,30 @@ public class Config {
 
 
     private void loadEnv() {
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+        Dotenv dotenv;
+        
+        try {
+            java.io.File localEnv = new java.io.File(".env");
+            
+            if (localEnv.exists()) {
+                // Load from current directory
+                dotenv = Dotenv.configure().load();
+            } else {
+                // Fallback: Check user home directory
+                String userHome = System.getProperty("user.home");
+                java.io.File homeEnv = new java.io.File(userHome, ".env");
+                if (homeEnv.exists()) {
+                    dotenv = Dotenv.configure().directory(userHome).ignoreIfMissing().load();
+                } else {
+                     // No .env file found, rely on environment variables or defaults
+                     dotenv = Dotenv.configure().ignoreIfMissing().load();
+                }
+            }
+        } catch (Exception e) {
+            // If any error occurs during .env loading, fall back to environment variables
+            System.err.println("Warning: Could not load .env file, using environment variables or defaults");
+            dotenv = Dotenv.configure().ignoreIfMissing().load();
+        }
 
         String host = dotenv.get("CADP_KMS_HOST");
         if (host != null && !host.isEmpty()) {

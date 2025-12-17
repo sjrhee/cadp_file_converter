@@ -39,6 +39,10 @@ public class Main {
             }
 
             if (cmd.hasOption("init")) {
+                if (cmd.getOptions().length > 1 || cmd.getArgList().size() > 0) {
+                     System.out.println("Warning: --init option is designed to be run alone. Other options are ignored.");
+                }
+
                 java.io.File envFile = new java.io.File(".env");
                 if (envFile.exists()) {
                     System.out.println("Warning: .env file already exists in current directory. Skipping generation.");
@@ -66,8 +70,16 @@ public class Main {
             } else if (cmd.hasOption("input")) {
                 config.setInputFilePath(cmd.getOptionValue("input"));
             } else {
-                System.out.println("Error: Input file required");
-                formatter.printHelp("cadp-file-converter [input_file]", options);
+                System.err.println("Error: Input file is missing.");
+                System.err.println("Usage: cadp-file-converter -i <input_file> [options]");
+                // formatter.printHelp("cadp-file-converter [input_file]", options); // Reduce noise
+                System.exit(1);
+            }
+
+            // Verify Input File Exists
+            java.io.File inputFile = new java.io.File(config.getInputFilePath());
+            if (!inputFile.exists() || !inputFile.isFile()) {
+                System.err.println("Error: Input file not found or invalid: " + config.getInputFilePath());
                 System.exit(1);
             }
 
