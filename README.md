@@ -2,6 +2,12 @@
 
 Thales CipherTrust Application Data Protection (CADP)를 사용하여 데이터 파일(CSV)을 암호화 및 복호화하는 고성능 커맨드라인 도구입니다.
 
+## 필수 조건 (Prerequisites)
+
+- Java 17 이상
+- Maven 3.6 이상
+- Thales CADP 로컬/네트워크 설정 (실제 키 관리 연동을 위해 필요)
+
 ## 빌드 (Build)
 
 ```bash
