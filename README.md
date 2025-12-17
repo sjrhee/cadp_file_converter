@@ -61,24 +61,14 @@ java -jar target/cadp-file-converter-*.jar [OPTIONS]
 `data.csv` 파일의 1번째 컬럼(특정 정책 사용)과 3번째 컬럼(기본 정책 사용)을 암호화합니다.
 
 ```bash
-java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar \
-  -m protect \
-  -i input_data.csv \
-  -o encrypted_data.csv \
-  -c 1=credit-card-policy -c 3 \
-  -s
+java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar -m protect -i input_data.csv -o encrypted_data.csv -c 1=credit-card-policy -c 3 -s
 ```
 
 **복호화 (Reveal):**
 위에서 암호화한 파일을 동일한 설정으로 복호화합니다.
 
 ```bash
-java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar \
-  -m reveal \
-  -i encrypted_data.csv \
-  -o decrypted_data.csv \
-  -c 1=credit-card-policy -c 3 \
-  -s
+java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar -m reveal -i encrypted_data.csv -o decrypted_data.csv -c 1=credit-card-policy -c 3 -s
 ```
 
 ## 문제 해결 (Troubleshooting)
