@@ -14,7 +14,15 @@ Thales CipherTrust Application Data Protection (CADP)를 사용하여 데이터 
 mvn clean package
 ```
 
-이 명령을 실행하면 `target/` 디렉토리에 실행 가능한 jar 파일이 생성됩니다 (예: `cadp-file-converter-1.0-SNAPSHOT-jar-with-dependencies.jar`).
+이 명령을 실행하면 `target/` 디렉토리에 실행 가능한 JAR 파일(`cadp-file-converter-1.0-SNAPSHOT.jar`)과 `lib/` 폴더(의존성 라이브러리)가 생성됩니다.
+
+**주의**: 실행 시 `lib/` 폴더가 JAR 파일과 동일한 디렉토리(또는 상위/지정 경로)에 존재해야 합니다.
+
+## 에러 처리 및 로깅 (Error Handling & Logging)
+
+- **자동 중단 (Circuit Breaker)**: 처리 중 연속으로 **10회**의 에러(API 실패 등)가 발생하면, 대량의 로그 발생을 방지하기 위해 작업이 자동으로 중단됩니다.
+- **실행 시간 측정**: 작업 시작 시간, 종료 시간, 그리고 총 소요 시간(초)이 콘솔에 출력됩니다.
+- **Row 단위 에러**: 단일 행 처리 실패 시 해당 행은 건너뛰고 오류 메시지를 출력하며, 전체 작업은 계속 진행됩니다(연속 실패 한도 내에서).
 
 ## 환경 변수 (Environment Variables)
 
@@ -24,7 +32,7 @@ mvn clean package
 |----------|-------------|---------|
 | `CADP_API_HOST` | CADP/NAE 서버의 IP 주소 | `192.168.0.10` |
 | `CADP_API_PORT` | CADP/NAE 서버의 포트 | `32082` |
-| `CADP_API_TLS` | 연결 시 TLS 사용 여부 (`true`/`false`) | `false` |
+
 | `CADP_REGISTRATION_TOKEN` | CADP 등록 토큰 (Registration Token) | (필수) |
 | `CADP_USER_NAME` | CADP 작업을 수행할 사용자명 | (필수) |
 | `CADP_PROTECTION_POLICY_NAME` | 기본 보호 정책 (키 이름) | `dev-users-policy` |
@@ -54,7 +62,7 @@ java -jar target/cadp-file-converter-*.jar [OPTIONS]
 `data.csv` 파일의 1번째 컬럼(특정 정책 사용)과 3번째 컬럼(기본 정책 사용)을 암호화합니다.
 
 ```bash
-java -jar target/cadp-file-converter-1.0.jar \
+java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar \
   -m protect \
   -i input_data.csv \
   -o encrypted_data.csv \
@@ -66,7 +74,7 @@ java -jar target/cadp-file-converter-1.0.jar \
 위에서 암호화한 파일을 동일한 설정으로 복호화합니다.
 
 ```bash
-java -jar target/cadp-file-converter-1.0.jar \
+java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar \
   -m reveal \
   -i encrypted_data.csv \
   -o decrypted_data.csv \

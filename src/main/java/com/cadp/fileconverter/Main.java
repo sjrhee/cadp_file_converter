@@ -111,16 +111,33 @@ public class Main {
             System.out.println("Config Loaded - Host: " + config.getApiHost() + ", Default Policy: " + config.getDefaultPolicy());
             System.out.println("Columns to process: " + config.getColumnPolicies());
 
+            long startTime = System.currentTimeMillis();
+            java.time.LocalDateTime startDateTime = java.time.LocalDateTime.now();
+            System.out.println("Start Time: " + startDateTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
             Converter converter = new Converter(config);
             converter.process();
+
+            long endTime = System.currentTimeMillis();
+            java.time.LocalDateTime endDateTime = java.time.LocalDateTime.now();
+            long durationMillis = endTime - startTime;
+            
+            System.out.println("End Time: " + endDateTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            System.out.println("Elapsed Time: " + durationMillis + " ms (" + String.format("%.2f", durationMillis / 1000.0) + " s)");
 
             System.out.println("Conversion completed successfully.");
 
         } catch (ParseException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Command line error: " + e.getMessage());
             formatter.printHelp("cadp-file-converter", options);
             System.exit(1);
+        } catch (RuntimeException e) {
+            System.err.println("Initialization Error: " + e.getMessage());
+            // Only print stack trace if debug mode is enabled (optional, for now keep it simple)
+            // e.printStackTrace(); 
+            System.exit(1);
         } catch (Exception e) {
+            System.err.println("Unexpected Error: " + e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }

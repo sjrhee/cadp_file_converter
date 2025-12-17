@@ -37,85 +37,73 @@ public class CadpClient {
      * Initialize the client with explicit configuration parameters.
      * Use this method to inject configuration from .env or other sources.
      */
-    public synchronized void init(String keyManagerHost, String keyManagerPort, String registrationToken, String policyName, String userName) {
-        // Avoid re-initialization if parameters haven't changed, or allow re-init to update?
-        // For simplicity, we just update and re-register.
+    /**
+     * Initialize the client with explicit configuration parameters.
+     * Use this method to inject configuration from .env or other sources.
+     */
+    public synchronized void init(String keyManagerHost, String keyManagerPort, String registrationToken, String policyName, String userName) throws Exception {
         this.protectionPolicyName = policyName;
         this.userName = userName;
 
         registerClient(keyManagerHost, keyManagerPort, registrationToken);
     }
 
-    private void registerClient(String keyManagerHost, String keyManagerPort, String registrationToken) {
-        try {
-            if (keyManagerHost == null || registrationToken == null) {
-                System.err.println("Cannot register client: missing host or token");
-                return;
-            }
-
-            RegisterClientParameters.Builder builder = new RegisterClientParameters.Builder(keyManagerHost,
-                    registrationToken.toCharArray());
-
-            if (keyManagerPort != null && !keyManagerPort.isEmpty()) {
-                try {
-                    int port = Integer.parseInt(keyManagerPort);
-                    builder.setWebPort(port);
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid port: " + keyManagerPort);
-                }
-            }
-
-            RegisterClientParameters registerClientParams = builder.build();
-
-            CentralManagementProvider centralManagementProvider = new CentralManagementProvider(registerClientParams);
-            centralManagementProvider.addProvider();
-
-            // Status update implementation
-            centralManagementProvider.subscribeToStatusUpdate(new ClientObserver<Object, Object>() {
-                @Override
-                public void notifyStatusUpdate(Object status, Object message) {
-                    System.out.println("[CADP Status] Status: " + status + ", Message: " + message);
-                }
-            });
-        } catch (Exception e) {
-            System.err.println("Error registering client: " + e.getMessage());
-            e.printStackTrace();
+    private void registerClient(String keyManagerHost, String keyManagerPort, String registrationToken) throws Exception {
+        if (keyManagerHost == null || registrationToken == null) {
+            throw new IllegalArgumentException("Cannot register client: missing host or token");
         }
+
+        RegisterClientParameters.Builder builder = new RegisterClientParameters.Builder(keyManagerHost,
+                registrationToken.toCharArray());
+
+        if (keyManagerPort != null && !keyManagerPort.isEmpty()) {
+            try {
+                int port = Integer.parseInt(keyManagerPort);
+                builder.setWebPort(port);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid port: " + keyManagerPort, e);
+            }
+        }
+
+        RegisterClientParameters registerClientParams = builder.build();
+
+        CentralManagementProvider centralManagementProvider = new CentralManagementProvider(registerClientParams);
+        centralManagementProvider.addProvider();
+
+        // Status update implementation
+        centralManagementProvider.subscribeToStatusUpdate(new ClientObserver<Object, Object>() {
+            @Override
+            public void notifyStatusUpdate(Object status, Object message) {
+                System.out.println("[CADP Status] Status: " + status + ", Message: " + message);
+            }
+        });
     }
 
-    public String enc(String plainText) {
+    public String enc(String plainText) throws Exception {
         return enc(this.protectionPolicyName, plainText);
     }
 
-    public String enc(String policyName, String plainText) {
+    public String enc(String policyName, String plainText) throws Exception {
         if (plainText == null)
             return null;
-        try {
-            CipherTextData cipherTextData = CryptoManager.protect(plainText.getBytes(StandardCharsets.UTF_8),
-                    policyName);
-            return new String(cipherTextData.getCipherText(), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        
+        CipherTextData cipherTextData = CryptoManager.protect(plainText.getBytes(StandardCharsets.UTF_8),
+                policyName);
+        return new String(cipherTextData.getCipherText(), StandardCharsets.UTF_8);
     }
 
-    public String dec(String cipherText) {
+    public String dec(String cipherText) throws Exception {
         return dec(this.protectionPolicyName, cipherText);
     }
 
-    public String dec(String policyName, String cipherText) {
+    public String dec(String policyName, String cipherText) throws Exception {
         if (cipherText == null)
             return null;
-        try {
-            CipherTextData cipherTextData = new CipherTextData();
-            cipherTextData.setCipherText(cipherText.getBytes(StandardCharsets.UTF_8));
+        
+        CipherTextData cipherTextData = new CipherTextData();
+        cipherTextData.setCipherText(cipherText.getBytes(StandardCharsets.UTF_8));
 
-            byte[] revealedData = CryptoManager.reveal(cipherTextData, policyName, this.userName);
-            return new String(revealedData, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        byte[] revealedData = CryptoManager.reveal(cipherTextData, policyName, this.userName);
+        return new String(revealedData, StandardCharsets.UTF_8);
     }
 }

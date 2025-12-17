@@ -8,7 +8,6 @@ public class Config {
     // API Connection
     private String apiHost = "192.168.0.10";
     private int apiPort = 32082;
-    private boolean apiTls = false;
     private String registrationToken;
     private String userName;
 
@@ -71,11 +70,6 @@ public class Config {
             }
         }
 
-        String tls = dotenv.get("CADP_API_TLS");
-        if (tls != null && !tls.isEmpty()) {
-            this.apiTls = Boolean.parseBoolean(tls);
-        }
-
         this.registrationToken = dotenv.get("CADP_REGISTRATION_TOKEN");
         this.userName = dotenv.get("CADP_USER_NAME");
         
@@ -103,8 +97,7 @@ public class Config {
     public int getApiPort() { return apiPort; }
     public void setApiPort(int apiPort) { this.apiPort = apiPort; }
 
-    public boolean isApiTls() { return apiTls; }
-    public void setApiTls(boolean apiTls) { this.apiTls = apiTls; }
+
 
     public String getRegistrationToken() { return registrationToken; }
     public void setRegistrationToken(String registrationToken) { this.registrationToken = registrationToken; }
