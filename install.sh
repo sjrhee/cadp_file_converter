@@ -48,6 +48,11 @@ else
     exit 1
 fi
 
+# Handle Log4j (Silence logs by linking to /dev/null)
+# The CADP library insists on writing to lib/CADPLogs.txt and ignores external config.
+# We redirect this to /dev/null to fix permission errors and silence logs.
+ln -sf /dev/null "$INSTALL_DIR/lib/CADPLogs.txt"
+
 echo "Step 3: Creating launcher command at $BIN_PATH..."
 cat > "$BIN_PATH" <<EOF
 #!/bin/bash

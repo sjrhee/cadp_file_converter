@@ -18,7 +18,8 @@
 #   -s, --skip-header       Skip first line
 #   -t, --threads <n>       Number of threads
 #
-
+# ./run.sh -m protect -i sampleData/employee.csv -o sampleData/employee_encrypted.csv \
+#   -c 3=dev-policy-02 -c 8=dev-policy-02 -c 11=dev-policy-01 -s -t 8
 JAR_FILE="target/cadp-file-converter-1.0-SNAPSHOT.jar"
 
 # Check if JAR exists
