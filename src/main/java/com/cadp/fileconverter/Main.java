@@ -34,7 +34,7 @@ public class Main {
             CommandLine cmd = parser.parse(options, args);
 
             if (cmd.hasOption("help")) {
-                formatter.printHelp("cadp-file-converter [input_file]", null, options, "\nEnvironment variables (or .env in current dir) required:\nCADP_API_HOST, CADP_REGISTRATION_TOKEN, etc.", true);
+                formatter.printHelp("cadp-file-converter [input_file]", null, options, "\nEnvironment variables (or .env in current dir) required:\nCADP_KMS_HOST, CADP_REGISTRATION_TOKEN, etc.", true);
                 return;
             }
 
@@ -45,8 +45,8 @@ public class Main {
                 } else {
                     try (java.io.FileWriter writer = new java.io.FileWriter(envFile)) {
                         writer.write("# CADP Connection Configuration\n");
-                        writer.write("CADP_API_HOST=192.168.0.10\n");
-                        writer.write("CADP_API_PORT=32082\n\n");
+                        writer.write("CADP_KMS_HOST=192.168.0.10\n");
+                        writer.write("CADP_KMS_PORT=32082\n\n");
                         writer.write("# Authentication\n");
                         writer.write("CADP_REGISTRATION_TOKEN=your_token_here\n");
                         writer.write("CADP_USER_NAME=your_username\n\n");
@@ -84,7 +84,7 @@ public class Main {
                 }
             } else {
                 System.out.println("Error: Mode required (-m protect or -m reveal)");
-                formatter.printHelp("cadp-file-converter [input_file]", null, options, "\nEnvironment variables (or .env in current dir) required:\nCADP_API_HOST, CADP_REGISTRATION_TOKEN, etc.", true);
+                formatter.printHelp("cadp-file-converter [input_file]", null, options, "\nEnvironment variables (or .env in current dir) required:\nCADP_KMS_HOST, CADP_REGISTRATION_TOKEN, etc.", true);
                 System.exit(1);
             }
 
@@ -158,7 +158,7 @@ public class Main {
         } catch (RuntimeException e) {
             if (e.getMessage() != null && e.getMessage().contains("missing host or token")) {
                 System.err.println("Configuration Error: Missing required connection parameters.");
-                System.err.println("Please ensure CADP_API_HOST, CADP_REGISTRATION_TOKEN, etc. are set in .env or environment variables.");
+                System.err.println("Please ensure CADP_KMS_HOST, CADP_REGISTRATION_TOKEN, etc. are set in .env or environment variables.");
                 System.err.println("Tip: Run with --init to generate a sample .env file.");
             } else {
                 System.err.println("Initialization Error: " + e.getMessage());
@@ -168,7 +168,7 @@ public class Main {
             String msg = e.getMessage();
             if (msg != null && msg.contains("missing host or token")) {
                 System.err.println("Configuration Error: Missing required connection parameters.");
-                System.err.println("Please ensure CADP_API_HOST, CADP_REGISTRATION_TOKEN, etc. are set in .env or environment variables.");
+                System.err.println("Please ensure CADP_KMS_HOST, CADP_REGISTRATION_TOKEN, etc. are set in .env or environment variables.");
                 System.err.println("Tip: Run with --init to generate a sample .env file.");
             } else {
                 System.err.println("Unexpected Error: " + msg);

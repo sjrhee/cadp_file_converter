@@ -33,8 +33,8 @@ sudo ./install.sh
 
 | 변수명 | 설명 | 기본값 |
 |----------|-------------|---------|
-| `CADP_API_HOST` | CADP/NAE 서버의 IP 주소 | `192.168.0.10` |
-| `CADP_API_PORT` | CADP/NAE 서버의 포트 | `32082` |
+| `CADP_KMS_HOST` | CADP/NAE 서버의 IP 주소 | `192.168.0.10` |
+| `CADP_KMS_PORT` | CADP/NAE 서버의 포트 | `32082` |
 | `CADP_REGISTRATION_TOKEN` | CADP 등록 토큰 (Registration Token) | (필수) |
 | `CADP_USER_NAME` | CADP 작업을 수행할 사용자명 | (필수) |
 | `CADP_PROTECTION_POLICY_NAME` | 기본 보호 정책 (키 이름) | `dev-users-policy` |
@@ -79,4 +79,4 @@ cadp-file-converter -m reveal -i encrypted_data.csv -o decrypted_data.csv -c 1=c
 
 ## 문제 해결 (Troubleshooting)
 
-연결 문제가 발생하는 경우, `CADP_API_HOST` 설정과 방화벽 규칙이 올바른지 확인하십시오.
+연결 문제가 발생하는 경우, `CADP_KMS_HOST` 설정과 방화벽 규칙이 올바른지 확인하십시오.

@@ -56,17 +56,17 @@ public class Config {
     private void loadEnv() {
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
 
-        String host = dotenv.get("CADP_API_HOST");
+        String host = dotenv.get("CADP_KMS_HOST");
         if (host != null && !host.isEmpty()) {
             this.apiHost = host;
         }
 
-        String port = dotenv.get("CADP_API_PORT");
+        String port = dotenv.get("CADP_KMS_PORT");
         if (port != null && !port.isEmpty()) {
             try {
                 this.apiPort = Integer.parseInt(port);
             } catch (NumberFormatException e) {
-                System.err.println("Invalid CADP_API_PORT format, using default: " + this.apiPort);
+                System.err.println("Invalid CADP_KMS_PORT format, using default: " + this.apiPort);
             }
         }
 
