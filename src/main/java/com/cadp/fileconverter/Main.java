@@ -26,6 +26,7 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(120);
+        formatter.setOptionComparator(null); // Preserve insertion order
 
         try {
             CommandLine cmd = parser.parse(options, args);
