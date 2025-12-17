@@ -8,25 +8,28 @@ Thales CipherTrust Application Data Protection (CADP)를 사용하여 데이터 
 - Maven 3.6 이상
 - Thales CADP 로컬/네트워크 설정 (실제 키 관리 연동을 위해 필요)
 
-## 빌드 (Build)
+## 설치 및 빌드 (Installation & Build)
+
+이 프로젝트는 `install.sh` 스크립트를 통해 자동으로 빌드되고 시스템(`/opt/cadp-file-converter`)에 설치됩니다.
 
 ```bash
-mvn clean package
+sudo ./install.sh
 ```
 
-이 명령을 실행하면 `target/` 디렉토리에 실행 가능한 JAR 파일(`cadp-file-converter-1.0-SNAPSHOT.jar`)과 `lib/` 폴더(의존성 라이브러리)가 생성됩니다.
-
-**주의**: 실행 시 `lib/` 폴더가 JAR 파일과 동일한 디렉토리(또는 상위/지정 경로)에 존재해야 합니다.
+- **설치 경로**: `/opt/cadp-file-converter`
+- **실행 명령어**: `/usr/local/bin/cadp-file-converter` 가 생성되어 어디서든 실행 가능합니다.
 
 ## 에러 처리 및 로깅 (Error Handling & Logging)
 
+- **로그 파일**: 권한 문제 방지를 위해 에러 로그는 **/tmp/cadp-file-converter.log** 에 저장됩니다. 디버깅 시 이 파일을 확인하십시오.
 - **자동 중단 (Circuit Breaker)**: 처리 중 연속으로 **10회**의 에러(API 실패 등)가 발생하면, 대량의 로그 발생을 방지하기 위해 작업이 자동으로 중단됩니다.
 - **실행 시간 측정**: 작업 시작 시간, 종료 시간, 그리고 총 소요 시간(초)이 콘솔에 출력됩니다.
 - **Row 단위 에러**: 단일 행 처리 실패 시 해당 행은 건너뛰고 오류 메시지를 출력하며, 전체 작업은 계속 진행됩니다(연속 실패 한도 내에서).
 
 ## 환경 변수 (Environment Variables)
 
-루트 디렉토리에 `.env` 파일을 생성하거나 다음 환경 변수들을 직접 설정하십시오:
+루트 디렉토리에 `.env` 파일을 생성하거나 다음 환경 변수들을 직접 설정하십시오.
+편의를 위해 `cadp-file-converter --init` 명령어를 실행하면 샘플 `.env` 파일이 생성됩니다.
 
 | 변수명 | 설명 | 기본값 |
 |----------|-------------|---------|
@@ -38,10 +41,12 @@ mvn clean package
 
 ## 사용법 (Usage)
 
+설치가 완료되면 `cadp-file-converter` 명령어를 어디서든 사용할 수 있습니다.
+
 ### 기본 명령어 구조
 
 ```bash
-java -jar target/cadp-file-converter-*.jar [OPTIONS]
+cadp-file-converter [OPTIONS]
 ```
 
 ### 옵션 (Options)
@@ -59,16 +64,17 @@ java -jar target/cadp-file-converter-*.jar [OPTIONS]
 
 **암호화 (Protect):**
 `data.csv` 파일의 1번째 컬럼(특정 정책 사용)과 3번째 컬럼(기본 정책 사용)을 암호화합니다.
+`skip-header`(-s) 옵션을 사용하여 헤더 처리를 방지하십시오 (암호화 실패 방지).
 
 ```bash
-java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar -m protect -i input_data.csv -o encrypted_data.csv -c 1=credit-card-policy -c 3 -s
+cadp-file-converter -m protect -i input_data.csv -o encrypted_data.csv -c 1=credit-card-policy -c 3 -s
 ```
 
 **복호화 (Reveal):**
 위에서 암호화한 파일을 동일한 설정으로 복호화합니다.
 
 ```bash
-java -jar target/cadp-file-converter-1.0-SNAPSHOT.jar -m reveal -i encrypted_data.csv -o decrypted_data.csv -c 1=credit-card-policy -c 3 -s
+cadp-file-converter -m reveal -i encrypted_data.csv -o decrypted_data.csv -c 1=credit-card-policy -c 3 -s
 ```
 
 ## 문제 해결 (Troubleshooting)
