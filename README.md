@@ -85,7 +85,7 @@ docker run --rm -v $(pwd):/data -v $(pwd)/.env:/app/.env ghcr.io/sjrhee/cadp-fil
   ```
 ### 윈도우 PowerShell 실행 예제 (Windows PowerShell Example)
 
-윈도우 환경에서 실행 시 경로 지정 방식이 다릅니다:
+docker 실행 폴더에 env.txt 파일이 있어야 합니다.
 
 ```powershell
 docker run --rm `
@@ -97,7 +97,6 @@ docker run --rm `
   -o /data/employee_enc.csv `
   -s -c 11 -t 4
 ```
-docker 실행 폴더에 env.txt 파일이 있어야 합니다.
 
 ## 에러 처리 및 로깅 (Error Handling & Logging)
 
