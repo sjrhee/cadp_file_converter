@@ -24,10 +24,17 @@
 # Determine the directory of the script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 JAR_FILE="${SCRIPT_DIR}/cadp-file-converter-1.0-SNAPSHOT.jar"
-JAVA_BIN="${SCRIPT_DIR}/jre/bin/java"
 
-# Fallback to system java if bundled JRE not found
-if [ ! -f "$JAVA_BIN" ]; then
+# Set Bundled JRE Environment if present
+BUNDLE_JRE="${SCRIPT_DIR}/jre"
+if [ -d "$BUNDLE_JRE" ]; then
+    # Set JAVA_HOME and LD_LIBRARY_PATH to use bundled JRE libraries
+    export JAVA_HOME="$BUNDLE_JRE"
+    export LD_LIBRARY_PATH="$BUNDLE_JRE/lib/server:$BUNDLE_JRE/lib:$LD_LIBRARY_PATH"
+    export PATH="$BUNDLE_JRE/bin:$PATH"
+    JAVA_BIN="${BUNDLE_JRE}/bin/java"
+else
+    # Fallback to system java if bundled JRE not found
     JAVA_BIN="java"
 fi
 
@@ -43,5 +50,5 @@ if [ ! -f "$JAR_FILE" ]; then
 fi
 
 # Execute the application with provided arguments
-"$JAVA_BIN" -jar "$JAR_FILE" "$@"
+"$JAVA_BIN" -Xms256m -Xmx2g -jar "$JAR_FILE" "$@"
 exit $?
