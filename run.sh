@@ -30,7 +30,8 @@ BUNDLE_JRE="${SCRIPT_DIR}/jre"
 if [ -d "$BUNDLE_JRE" ]; then
     # Set JAVA_HOME and LD_LIBRARY_PATH to use bundled JRE libraries
     export JAVA_HOME="$BUNDLE_JRE"
-    export LD_LIBRARY_PATH="$BUNDLE_JRE/lib/server:$BUNDLE_JRE/lib:$LD_LIBRARY_PATH"
+    # Core JRE libraries are in lib/server, lib, and lib/jli
+    export LD_LIBRARY_PATH="$BUNDLE_JRE/lib/server:$BUNDLE_JRE/lib/jli:$BUNDLE_JRE/lib:$LD_LIBRARY_PATH"
     export PATH="$BUNDLE_JRE/bin:$PATH"
     JAVA_BIN="${BUNDLE_JRE}/bin/java"
 else
