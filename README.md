@@ -4,9 +4,15 @@ Thales CipherTrust Application Data Protection (CADP)를 사용하여 데이터 
 
 ## 필수 조건 (Prerequisites)
 
-- Java 17 이상
+### 빌드 및 개발 시
+- **Java 11 이상** (pom.xml 및 현재 빌드 환경 기준)
 - Maven 3.6 이상
-- Thales CADP 로컬/네트워크 설정 (실제 키 관리 연동을 위해 필요)
+- Thales CADP 로컬/네트워크 설정
+
+### 단독 실행 패키지 사용 시
+- **자바(Java) 설치 불필요** (JRE 11이 패키지에 포함되어 있습니다)
+- 리눅스(Linux) x64 환경
+- Thales CADP 연동 설정 (.env 파일)
 
 ## 설치 및 빌드 (Installation & Build)
 
@@ -18,6 +24,34 @@ sudo ./install.sh
 
 - **설치 경로**: `/opt/cadp-file-converter`
 - **실행 명령어**: `/usr/local/bin/cadp-file-converter` 가 생성되어 어디서든 실행 가능합니다.
+
+## 단독 실행 패키지 제작 (Standalone Packaging)
+
+다른 서버로 전달하여 즉시 실행할 수 있도록 JRE(Java Runtime Environment)와 설정 파일을 포함한 패키지를 제작할 수 있습니다.
+
+### 패키지 빌드
+
+```bash
+mvn clean package -DskipTests
+```
+
+- **결과물**: `target/cadp-file-converter-1.0-SNAPSHOT-bin.tar.gz`
+- **포함 내용**:
+    - `jre/`: Java 실행 환경 (별도 자바 설치 필요 없음)
+    - `.env`: 현재 설정 파일 (전달 시 포함됨)
+    - `run.sh`: 원클릭 실행 스크립트
+    - `lib/` 및 핵심 JAR 파일
+
+### 다른 서버에서 실행
+
+1. 생성된 `tar.gz` 파일을 대상 서버로 복사합니다.
+2. 압축을 해제하고 `run.sh`를 실행합니다.
+
+```bash
+tar -xzvf cadp-file-converter-1.0-SNAPSHOT-bin.tar.gz
+cd cadp-file-converter-1.0-SNAPSHOT
+./run.sh [OPTIONS]
+```
 
 ## 에러 처리 및 로깅 (Error Handling & Logging)
 
