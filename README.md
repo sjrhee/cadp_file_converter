@@ -97,6 +97,7 @@ docker run --rm `
   -o /data/employee_enc.csv `
   -s -c 11 -t 4
 ```
+docker 실행 폴더에 env.txt 파일이 있어야 합니다.
 
 ## 에러 처리 및 로깅 (Error Handling & Logging)
 
