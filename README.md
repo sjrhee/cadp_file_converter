@@ -53,6 +53,31 @@ cd cadp-file-converter-1.0-SNAPSHOT
 ./run.sh [OPTIONS]
 ```
 
+## 도커 이미지 사용 제안 (Docker Image Usage)
+
+도커를 사용하면 자바 설치나 복잡한 설정 없이 어디서든 즉시 실행할 수 있습니다.
+
+### 이미지 빌드
+
+```bash
+docker build -t cadp-file-converter .
+```
+
+### 이미지 실행
+
+`.env` 파일을 현재 디렉토리에 두고 다음 명령어를 실행합니다.
+
+```bash
+docker run --rm -v $(pwd)/.env:/app/.env cadp-file-converter [OPTIONS]
+```
+
+- **옵션 예시**: `-m protect -i data.csv -o output.csv -c 1 -s`
+- **입출력 파일 연결**: 로컬 디렉터리의 파일을 처리하려면 볼륨 마운트(`-v`)가 필요합니다.
+  ```bash
+  docker run --rm -v $(pwd):/data -v $(pwd)/.env:/app/.env cadp-file-converter -i /data/input.csv -o /data/output.csv [다른 옵션들]
+  ```
+
+
 ## 에러 처리 및 로깅 (Error Handling & Logging)
 
 - **로그 파일**: 권한 문제 방지를 위해 에러 로그는 **/tmp/cadp-file-converter.log** 에 저장됩니다. 디버깅 시 이 파일을 확인하십시오.

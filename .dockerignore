@@ -1,0 +1,11 @@
+target/
+*.tar.gz
+jre/
+.env
+.git/
+.gitignore
+*.log
+err.txt
+out_verify_rename.csv
+temp_test/
+sampleData/
