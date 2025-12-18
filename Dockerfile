@@ -18,10 +18,6 @@ WORKDIR /app
 COPY --from=build /app/target/cadp-file-converter-1.0-SNAPSHOT.jar ./app.jar
 COPY --from=build /app/target/lib ./lib
 
-# Create a volume for data and logs
-VOLUME /data
-VOLUME /tmp
-
 # Set environment variables for Java
 ENV JAVA_OPTS="-Xms256m -Xmx2g"
 

@@ -53,7 +53,7 @@ cd cadp-file-converter-1.0-SNAPSHOT
 ./run.sh [OPTIONS]
 ```
 
-## 도커 이미지 사용 제안 (Docker Image Usage)
+## 도커 이미지 사용 (Docker Image Usage)
 
 도커를 사용하면 자바 설치나 복잡한 설정 없이 어디서든 즉시 실행할 수 있습니다.
 
@@ -63,12 +63,19 @@ cd cadp-file-converter-1.0-SNAPSHOT
 docker build -t cadp-file-converter .
 ```
 
-### 이미지 실행
+### GitHub Container Registry (GHCR)에서 바로 실행
 
-`.env` 파일을 현재 디렉토리에 두고 다음 명령어를 실행합니다.
+이미지를 직접 빌드하지 않고, GitHub 저장소에서 바로 다운로드하여 실행할 수 있습니다.
 
 ```bash
-docker run --rm -v $(pwd)/.env:/app/.env cadp-file-converter [OPTIONS]
+# 최신 이미지 다운로드
+docker pull ghcr.io/sjrhee/cadp-file-converter:latest
+```
+`.env` 파일과 데이터 파일(`input.csv` 등)이 있는 현재 디렉토리를 각각 마운트하여 실행합니다. 
+컨테이너 내부에서는 `/data` 경로를 통해 파일에 접근할 수 있습니다.
+
+```bash
+docker run --rm -v $(pwd):/data -v $(pwd)/.env:/app/.env ghcr.io/sjrhee/cadp-file-converter:latest -i /data/input.csv -o /data/output.csv [OPTIONS]
 ```
 
 - **옵션 예시**: `-m protect -i data.csv -o output.csv -c 1 -s`
