@@ -5,3 +5,4 @@ dependency-reduced-pom.xml
 .idea/
 *.iml
 sampleData/
+jre/
