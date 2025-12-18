@@ -83,7 +83,20 @@ docker run --rm -v $(pwd):/data -v $(pwd)/.env:/app/.env ghcr.io/sjrhee/cadp-fil
   ```bash
   docker run --rm -v $(pwd):/data -v $(pwd)/.env:/app/.env cadp-file-converter -i /data/input.csv -o /data/output.csv [다른 옵션들]
   ```
+### 윈도우 PowerShell 실행 예제 (Windows PowerShell Example)
 
+윈도우 환경에서 실행 시 경로 지정 방식이 다릅니다:
+
+```powershell
+docker run --rm `
+  -v "${PWD}/data:/data" `
+  -v "${PWD}/env.txt:/app/.env" `
+  ghcr.io/sjrhee/cadp-file-converter:latest `
+  -m protect `
+  -i /data/employee.csv `
+  -o /data/employee_enc.csv `
+  -s -c 11 -t 4
+```
 
 ## 에러 처리 및 로깅 (Error Handling & Logging)
 
