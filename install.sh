@@ -22,7 +22,7 @@ if [ ! -f "build.sh" ]; then
 fi
 
 echo "Step 1: Building project..."
-./build.sh
+./build_package.sh
 if [ $? -ne 0 ]; then
     echo "Build failed. Aborting installation."
     exit 1

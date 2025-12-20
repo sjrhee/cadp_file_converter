@@ -45,7 +45,7 @@ if [ ! -f "$JAR_FILE" ]; then
     JAR_FILE="${SCRIPT_DIR}/target/cadp-file-converter-1.0-SNAPSHOT.jar"
     if [ ! -f "$JAR_FILE" ]; then
         echo "Error: Application JAR not found."
-        echo "Please run './build.sh' (or 'mvn clean package') first to build the project."
+        echo "Please run './build_package.sh' (or 'mvn clean package') first to build the project."
         exit 1
     fi
 fi
